@@ -7,3 +7,16 @@ type Note @model @auth(rules: [ { allow: public } ] ){
   name: String!
   description: String
 }
+
+#type Poll @model @auth(rules: [ { allow: public } ] ){
+#  id: ID!
+#  options: [Option!]!
+#  description: String
+#}
+#
+#type Option @model @auth(rules: [ { allow: public } ] ){
+#  id: ID!
+#  text: String!
+#  numVotes: Int!
+#  voters: [ID!]!
+#}
