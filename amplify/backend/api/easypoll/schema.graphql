@@ -8,15 +8,15 @@ type Note @model @auth(rules: [ { allow: public } ] ){
   description: String
 }
 
-#type Poll @model @auth(rules: [ { allow: public } ] ){
-#  id: ID!
-#  options: [Option!]!
-#  description: String
-#}
-#
-#type Option @model @auth(rules: [ { allow: public } ] ){
-#  id: ID!
-#  text: String!
-#  numVotes: Int!
-#  voters: [ID!]!
-#}
+type Poll @model @auth(rules: [ { allow: public } ] ){
+  id: ID!
+  options: [Option] @hasMany(indexName: "byPoll", fields: ["id"])
+  description: String
+}
+
+type Option @model @auth(rules: [ { allow: public } ] ){
+  pollId: ID! @index(name: "byPoll", sortKeyFields: ["numVotes"])
+  text: String!
+  numVotes: Int!
+  voters: [ID!]!
+}

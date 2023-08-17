@@ -3,12 +3,22 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID generator
 import copy from 'copy-to-clipboard';
 import axios from 'axios';
+import { API, graphqlOperation } from "aws-amplify";
 import Cookies from 'universal-cookie'
+import { listPolls } from "../graphql/queries";
+import {
+    createPoll as createPollMutation,
+    createOption as createOptionMutation,
+} from "../graphql/mutations";
+
+import $ from 'jquery';
+
 
 function PollOptions() {
     const [options, setOptions] = useState([]);
     const [isPollGenerated, setIsPollGenerated] = useState(false);
     const [generatedPoll, setGeneratedPoll] = useState("");
+    const [description, setDescription] = useState("");
     const axiosInstance = axios.create({
         baseURL: 'http://localhost:8000', // Replace with your backend server URL and custom port
         timeout: 10000, // Optional: Set a timeout for requests
@@ -35,6 +45,10 @@ function PollOptions() {
         setOptions(updatedOptions);
     };
 
+    const handleDescriptionChange = (newDescription) => {
+        setDescription(newDescription);
+    };
+
     const generatePollText = () => {
         let pollText = "";
         options.forEach(option => {
@@ -48,13 +62,37 @@ function PollOptions() {
     const createPoll = async () => {
         // get curr poll values
         const optionTexts = options.map(option => option.text);
-        
+
         // generate user id if not in cookies otherwise get from cookies
         let userId = cookies.get("userId");
-        if(!userId){
+        if (!userId) {
             userId = uuidv4();
             cookies.set("userId", userId);
         }
+
+        console.log(description, optionTexts);
+
+        const createPollParams = {
+            input: { description: description }
+        }
+
+        const createPollResult = await API.graphql(graphqlOperation(createPollMutation, createPollParams));
+        const poll = createPollResult.data.createPoll;
+        console.log(poll);
+
+        for (let option of options) {
+            const optionParams = {
+                input: {
+                    text: option.text,
+                    numVotes: 0,
+                    voters: [],
+                    pollId: poll.id
+                }
+            }
+            const createOptionResult = await API.graphql(graphqlOperation(createOptionMutation, optionParams));
+            console.log(createOptionResult);
+        }
+
 
         //await axiosInstance.post("/api/polls/create", { userId, options: optionTexts });
     }
@@ -73,9 +111,16 @@ function PollOptions() {
     return (
         <Grid pad="medium" gap="medium">
             <h2>easy poll</h2>
+            <TextInput
+                className='descriptionTitle'
+                placeholder={description === "" ? "What is your favorite color?" : ""}
+                value={description}
+                onChange={e => handleDescriptionChange(e.target.value)}
+            />
             {options.map((option, index) => (
                 <Box key={option.id} direction='row'>
                     <TextInput
+                        className='optionInput'
                         placeholder={option.text === "" ? "Option " + (index + 1) : ""}
                         value={option.text}
                         onChange={e => handleOptionChange(option.id, e.target.value)}
