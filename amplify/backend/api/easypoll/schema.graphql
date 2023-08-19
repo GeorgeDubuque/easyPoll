@@ -10,6 +10,7 @@ type Note @model @auth(rules: [ { allow: public } ] ){
 
 type Poll @model @auth(rules: [ { allow: public } ] ){
   id: ID!
+  creatorId: ID!
   options: [Option] @hasMany(indexName: "byPoll", fields: ["id"])
   description: String
 }
@@ -19,4 +20,9 @@ type Option @model @auth(rules: [ { allow: public } ] ){
   text: String!
   numVotes: Int!
   voters: [ID!]!
+}
+
+type User @model @auth(rules: [ { allow: public } ] ){
+  userId: ID!
+  username: String
 }

@@ -26,7 +26,7 @@ function PollOptions() {
             // Optional: Set default headers here (e.g., authentication tokens)
         }
     });
-    const cookies = new Cookies()
+    const cookies = new Cookies();
 
     const addOption = async () => {
         const newOption = { id: uuidv4(), text: '' }; // Generate unique ID
@@ -49,14 +49,19 @@ function PollOptions() {
         setDescription(newDescription);
     };
 
-    const generatePollText = () => {
+    const generatePollText = (poll, optionsList) => {
+        console.log(poll, optionsList);
         let pollText = "";
-        options.forEach(option => {
-            pollText += `😀 ${option.text} - ${generateOptionLink(option.id)}\n\n`
+        optionsList.forEach(option => {
+            pollText += `😀 ${option.text} - ${generateOptionLink(poll.id, option.id)}\n\n`
         });
 
         setGeneratedPoll(pollText);
         setIsPollGenerated(true);
+    }
+
+    const generateOptionLink = (pollId, optionId) => {
+        return `localhost:8000/vote?pollid=${pollId}&optionid=${optionId}`;
     }
 
     const createPoll = async () => {
@@ -73,13 +78,14 @@ function PollOptions() {
         console.log(description, optionTexts);
 
         const createPollParams = {
-            input: { description: description }
+            input: { description: description, creatorId: userId }
         }
 
         const createPollResult = await API.graphql(graphqlOperation(createPollMutation, createPollParams));
         const poll = createPollResult.data.createPoll;
         console.log(poll);
 
+        let optionsList = [];
         for (let option of options) {
             const optionParams = {
                 input: {
@@ -90,15 +96,13 @@ function PollOptions() {
                 }
             }
             const createOptionResult = await API.graphql(graphqlOperation(createOptionMutation, optionParams));
+            optionsList.push(createOptionResult.data.createOption);
             console.log(createOptionResult);
         }
 
 
+        generatePollText(poll, optionsList);
         //await axiosInstance.post("/api/polls/create", { userId, options: optionTexts });
-    }
-
-    const generateOptionLink = (id) => {
-        return "https://www.fakelink.com/" + id;
     }
 
     const copyGeneratedPollIntoClipboard = () => {

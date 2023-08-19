@@ -53,6 +53,7 @@ export const createPoll = /* GraphQL */ `
   ) {
     createPoll(input: $input, condition: $condition) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -81,6 +82,7 @@ export const updatePoll = /* GraphQL */ `
   ) {
     updatePoll(input: $input, condition: $condition) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -109,6 +111,7 @@ export const deletePoll = /* GraphQL */ `
   ) {
     deletePoll(input: $input, condition: $condition) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -174,6 +177,51 @@ export const deleteOption = /* GraphQL */ `
       text
       numVotes
       voters
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      userId
+      username
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      userId
+      username
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      userId
+      username
       id
       createdAt
       updatedAt

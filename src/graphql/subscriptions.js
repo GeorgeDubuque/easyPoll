@@ -41,6 +41,7 @@ export const onCreatePoll = /* GraphQL */ `
   subscription OnCreatePoll($filter: ModelSubscriptionPollFilterInput) {
     onCreatePoll(filter: $filter) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -66,6 +67,7 @@ export const onUpdatePoll = /* GraphQL */ `
   subscription OnUpdatePoll($filter: ModelSubscriptionPollFilterInput) {
     onUpdatePoll(filter: $filter) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -91,6 +93,7 @@ export const onDeletePoll = /* GraphQL */ `
   subscription OnDeletePoll($filter: ModelSubscriptionPollFilterInput) {
     onDeletePoll(filter: $filter) {
       id
+      creatorId
       options {
         items {
           pollId
@@ -147,6 +150,42 @@ export const onDeleteOption = /* GraphQL */ `
       text
       numVotes
       voters
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
+    onCreateUser(filter: $filter) {
+      userId
+      username
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
+    onUpdateUser(filter: $filter) {
+      userId
+      username
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
+    onDeleteUser(filter: $filter) {
+      userId
+      username
       id
       createdAt
       updatedAt
