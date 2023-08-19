@@ -45,10 +45,10 @@ function VoteForOption() {
         const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
         if (prevVotedOption) {
             if (prevVotedOption.id !== votedOption.id) {
-                //Remove vote from prev option
+
+                // Remove vote from prev option
                 let prevVoters = prevVotedOption.voters;
                 prevVoters = removeItemFromArray(prevVoters, cookies.get("userId"));
-
                 const removeUpdateParams = {
                     input: {
                         id: prevVotedOption.id,
@@ -56,11 +56,12 @@ function VoteForOption() {
                         voters: prevVoters
                     }
                 }
-
                 const removeVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, removeUpdateParams));
                 console.log("Removed previous vote: ", removeVoteResult);
+
             }
         }         
+        // Add new vote for curr option
         const addVoteParams = {
             input: {
                 id: votedOption.id,
@@ -69,11 +70,8 @@ function VoteForOption() {
                 voters: [...votedOption.voters, cookies.get("userId")]
             }
         }
-        console.log("graphQl for adding vote: ", addVoteParams);
-
         const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));
         console.log("Added vote:", addVoteResult);
-        //Add Vote for new option
 
         console.log("Previously Voted Option: ", votedOption);
 

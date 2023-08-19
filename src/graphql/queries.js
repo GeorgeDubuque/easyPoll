@@ -83,6 +83,37 @@ export const listPolls = /* GraphQL */ `
     }
   }
 `;
+export const listPollsByCreator = `
+  query ListPollsByCreator(
+    $creatorId: ID!
+    $nextToken: String
+  ) {
+    listPolls(filter: { creatorId: { eq: $creatorId } }, nextToken: $nextToken) {
+      items {
+        id
+        creatorId
+        options {
+          items {
+            pollId
+            text
+            numVotes
+            voters
+            id
+            createdAt
+            updatedAt
+            __typename
+          }
+        }
+        description
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getOption = /* GraphQL */ `
   query GetOption($id: ID!) {
     getOption(id: $id) {

@@ -61,7 +61,7 @@ function PollOptions() {
     }
 
     const generateOptionLink = (pollId, optionId) => {
-        return `localhost:8000/vote?pollid=${pollId}&optionid=${optionId}`;
+        return `localhost:3000/vote?pollid=${pollId}&optionid=${optionId}`;
     }
 
     const createPoll = async () => {

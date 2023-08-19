@@ -119,6 +119,7 @@ import {
   withAuthenticator,
 } from "@aws-amplify/ui-react";
 import VoteForOption from './components/VoteForOption';
+import ViewPolls from './components/ViewPolls';
 
 
 function App() {
@@ -216,6 +217,7 @@ function App() {
                 <Routes>
                   <Route path='/' element={<PollOptions />} />
                   <Route path='/vote' element={<VoteForOption />} />
+                  <Route path='/polls' element={<ViewPolls />} />
                 </Routes>
               </Box>
             </Grid>
