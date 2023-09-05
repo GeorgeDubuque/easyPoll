@@ -62,17 +62,14 @@ function PollOptions() {
     }
 
     const generateOptionLink = (pollId, optionId) => {
-        return `localhost:3000/vote?pollid=${pollId}&optionid=${optionId}`;
+        var baseUrl = window.location.origin;
+        return `${baseUrl}/vote?pollid=${pollId}&optionid=${optionId}`;
     }
 
     const createPoll = async () => {
-        // get curr poll values
-        const optionTexts = options.map(option => option.text);
 
         // generate user id if not in cookies otherwise get from cookies
         let userId = getOrSetUserId();
-
-        console.log(description, optionTexts);
 
         const createPollParams = {
             input: { description: description, creatorId: userId }
@@ -133,6 +130,8 @@ function PollOptions() {
             ))}
             <Button primary onClick={addOption} label="Add Option" />
             <Button primary onClick={createPoll} label="Generate Poll" />
+
+            {/* Display generated poll text. */}
             {isPollGenerated ? (
                 <Box>
                     <textarea
