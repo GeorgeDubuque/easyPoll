@@ -29,19 +29,50 @@ function ViewPolls({ creatorId }) {
         fetchPolls();
     }, [creatorId]);
 
-    const listPoll = (poll) => {
+    const getTotalVotesOnPoll = (poll) => {
+        let totalVotes = 0;
+        for (let option of poll.options.items) {
+            totalVotes += option.numVotes;
+        }
+
+        return totalVotes;
+    }
+
+    const listPolls = () => {
+        let listedPolls = [];
+        for (let poll of polls) {
+            const totalVotes = getTotalVotesOnPoll(poll);
+            listedPolls.push(listPoll(poll, totalVotes))
+        }
+
+        return listedPolls;
+    }
+
+    const listPoll = (poll, totalVotes) => {
         const options = poll.options.items;
+        const numOptions = poll.options.items.length;
         return (
-            <Box>
+            <Grid margin="medium" gap="small">
                 <h3>{poll.description}</h3>
                 {
                     options.map((option) => (
                         (
-                            <p>{option.text}: {option.numVotes}</p>
+                            <Box style={{width: "100%"}} background="dark-1" round>
+                                <Box 
+                                    style={{
+                                        width: (option.numVotes/totalVotes)*100 + "%", 
+                                        backgroundColor: (option.numVotes/totalVotes > 0 ? "#30a3f0" : "")
+                                    }} 
+                                    round
+                                    pad="2%"
+                                >
+                                    {option.text}
+                                </Box>
+                            </Box>
                         )
                     ))
                 }
-            </Box>
+            </Grid>
         )
     }
 
@@ -52,9 +83,7 @@ function ViewPolls({ creatorId }) {
     return (
         <Box fill overflow="scroll">
             <Grid>
-                {polls.map(poll => (
-                    listPoll(poll)
-                ))}
+                {listPolls()}
             </Grid>
         </Box>
     );
