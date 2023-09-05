@@ -15,6 +15,7 @@ import {
 
 import $ from 'jquery';
 import { async } from 'q';
+import { getOrSetUserId } from '../utility/utilities';
 
 
 function VoteForOption() {
@@ -26,7 +27,6 @@ function VoteForOption() {
     const [poll, setPoll] = useState({});
     const cookies = new Cookies();
     useEffect(() => {
-        //fetchOption();
         fetchPoll();
     }, []);
 
@@ -43,12 +43,13 @@ function VoteForOption() {
         console.log("Voted Option: ", votedOption);
 
         const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
+        let userId = getOrSetUserId();
         if (prevVotedOption) {
             if (prevVotedOption.id !== votedOption.id) {
 
                 // Remove vote from prev option
                 let prevVoters = prevVotedOption.voters;
-                prevVoters = removeItemFromArray(prevVoters, cookies.get("userId"));
+                prevVoters = removeItemFromArray(prevVoters, userId);
                 const removeUpdateParams = {
                     input: {
                         id: prevVotedOption.id,
@@ -60,14 +61,14 @@ function VoteForOption() {
                 console.log("Removed previous vote: ", removeVoteResult);
 
             }
-        }         
+        }
         // Add new vote for curr option
         const addVoteParams = {
             input: {
                 id: votedOption.id,
                 pollId: pollId,
                 numVotes: (votedOption.numVotes + 1),
-                voters: [...votedOption.voters, cookies.get("userId")]
+                voters: [...votedOption.voters, userId]
             }
         }
         const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));

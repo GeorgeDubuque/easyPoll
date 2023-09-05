@@ -3,6 +3,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { listPollsByCreator } from '../graphql/queries';
 import Cookies from 'universal-cookie';
 import { Box, Grid } from 'grommet';
+import { getOrSetUserId } from '../utility/utilities';
 
 function ViewPolls({ creatorId }) {
     const [polls, setPolls] = useState([]);
@@ -12,7 +13,7 @@ function ViewPolls({ creatorId }) {
     useEffect(() => {
         async function fetchPolls() {
             try {
-                const userId = cookies.get("userId")
+                const userId = getOrSetUserId();
                 const response = await API.graphql(graphqlOperation(listPollsByCreator, { creatorId: userId }));
                 if (response.data.listPolls && response.data.listPolls.items) {
                     console.log("Retrieved Polls: ", response.data.listPolls.items);
@@ -30,7 +31,7 @@ function ViewPolls({ creatorId }) {
         fetchPolls();
     }, [creatorId]);
 
-    const buildPoll = (poll) => {
+    const listPoll = (poll) => {
         const options = poll.options.items;
         return (
             <Box>
@@ -53,7 +54,7 @@ function ViewPolls({ creatorId }) {
     return (
         <Grid>
             {polls.map(poll => (
-                buildPoll(poll)
+                listPoll(poll)
             ))}
         </Grid>
     );

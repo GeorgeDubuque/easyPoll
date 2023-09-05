@@ -12,6 +12,7 @@ import {
 } from "../graphql/mutations";
 
 import $ from 'jquery';
+import { getOrSetUserId } from '../utility/utilities';
 
 
 function PollOptions() {
@@ -69,11 +70,7 @@ function PollOptions() {
         const optionTexts = options.map(option => option.text);
 
         // generate user id if not in cookies otherwise get from cookies
-        let userId = cookies.get("userId");
-        if (!userId) {
-            userId = uuidv4();
-            cookies.set("userId", userId);
-        }
+        let userId = getOrSetUserId();
 
         console.log(description, optionTexts);
 
@@ -83,7 +80,8 @@ function PollOptions() {
 
         const createPollResult = await API.graphql(graphqlOperation(createPollMutation, createPollParams));
         const poll = createPollResult.data.createPoll;
-        console.log(poll);
+        console.log(`Create poll response: ${createPollResult}`);
+        console.log(`Poll: ${poll}`);
 
         let optionsList = [];
         for (let option of options) {
@@ -120,6 +118,7 @@ function PollOptions() {
                 placeholder={description === "" ? "What is your favorite color?" : ""}
                 value={description}
                 onChange={e => handleDescriptionChange(e.target.value)}
+                autoFocus={true}
             />
             {options.map((option, index) => (
                 <Box key={option.id} direction='row'>
