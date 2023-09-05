@@ -1,9 +1,7 @@
 
 import { Box, Button, Grid, Paragraph, Text, TextInput } from 'grommet';
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID generator
 import copy from 'copy-to-clipboard';
-import axios from 'axios';
 import { API, graphqlOperation } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import { getOption, getPoll } from "../graphql/queries";
@@ -13,8 +11,6 @@ import {
     updateOption as updateOptionMutation
 } from "../graphql/mutations";
 
-import $ from 'jquery';
-import { async } from 'q';
 import { getOrSetUserId } from '../utility/utilities';
 
 

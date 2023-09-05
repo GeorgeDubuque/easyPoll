@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid'; // Import UUID generator
 import copy from 'copy-to-clipboard';
 import axios from 'axios';
 import { API, graphqlOperation } from "aws-amplify";
-import Cookies from 'universal-cookie'
 import { listPolls } from "../graphql/queries";
 import {
     createPoll as createPollMutation,
@@ -20,14 +19,6 @@ function PollOptions() {
     const [isPollGenerated, setIsPollGenerated] = useState(false);
     const [generatedPoll, setGeneratedPoll] = useState("");
     const [description, setDescription] = useState("");
-    const axiosInstance = axios.create({
-        baseURL: 'http://localhost:8000', // Replace with your backend server URL and custom port
-        timeout: 10000, // Optional: Set a timeout for requests
-        headers: {
-            // Optional: Set default headers here (e.g., authentication tokens)
-        }
-    });
-    const cookies = new Cookies();
 
     const addOption = async () => {
         const newOption = { id: uuidv4(), text: '' }; // Generate unique ID
@@ -97,13 +88,9 @@ function PollOptions() {
 
 
         generatePollText(poll, optionsList);
-        //await axiosInstance.post("/api/polls/create", { userId, options: optionTexts });
     }
 
     const copyGeneratedPollIntoClipboard = () => {
-        //navigator.clipboard.writeText(generatedPoll).then(() => {
-        //    console.log("got heem");
-        //});
         copy(generatedPoll);
     }
 

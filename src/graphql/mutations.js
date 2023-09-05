@@ -54,6 +54,7 @@ export const createPoll = /* GraphQL */ `
     createPoll(input: $input, condition: $condition) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -69,7 +70,6 @@ export const createPoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
@@ -83,6 +83,7 @@ export const updatePoll = /* GraphQL */ `
     updatePoll(input: $input, condition: $condition) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -98,7 +99,6 @@ export const updatePoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
@@ -112,6 +112,7 @@ export const deletePoll = /* GraphQL */ `
     deletePoll(input: $input, condition: $condition) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -127,7 +128,6 @@ export const deletePoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }

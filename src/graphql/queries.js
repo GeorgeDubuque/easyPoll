@@ -38,6 +38,7 @@ export const getPoll = /* GraphQL */ `
     getPoll(id: $id) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -53,7 +54,6 @@ export const getPoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
@@ -69,43 +69,12 @@ export const listPolls = /* GraphQL */ `
       items {
         id
         creatorId
+        createdAt
         options {
           nextToken
           __typename
         }
         description
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const listPollsByCreator = `
-  query ListPollsByCreator(
-    $creatorId: ID!
-    $nextToken: String
-  ) {
-    listPolls(filter: { creatorId: { eq: $creatorId } }, nextToken: $nextToken) {
-      items {
-        id
-        creatorId
-        options {
-          items {
-            pollId
-            text
-            numVotes
-            voters
-            id
-            createdAt
-            updatedAt
-            __typename
-          }
-        }
-        description
-        createdAt
         updatedAt
         __typename
       }
@@ -174,6 +143,50 @@ export const listUsers = /* GraphQL */ `
         username
         id
         createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const pollsByDate = /* GraphQL */ `
+  query PollsByDate(
+    $creatorId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPollFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    pollsByDate(
+      creatorId: $creatorId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        creatorId
+        createdAt
+        options {
+        items {
+          pollId
+          text
+          numVotes
+          voters
+          id
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+        }
+        description
         updatedAt
         __typename
       }

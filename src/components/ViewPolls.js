@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listPollsByCreator } from '../graphql/queries';
-import Cookies from 'universal-cookie';
+import { pollsByDate } from '../graphql/queries';
 import { Box, Grid } from 'grommet';
 import { getOrSetUserId } from '../utility/utilities';
 
 function ViewPolls({ creatorId }) {
     const [polls, setPolls] = useState([]);
     const [error, setError] = useState(null);
-    const cookies = new Cookies();
 
     useEffect(() => {
         async function fetchPolls() {
             try {
                 const userId = getOrSetUserId();
-                const response = await API.graphql(graphqlOperation(listPollsByCreator, { creatorId: userId }));
-                if (response.data.listPolls && response.data.listPolls.items) {
-                    console.log("Retrieved Polls: ", response.data.listPolls.items);
-                    setPolls(response.data.listPolls.items);
+                const response = await API.graphql(graphqlOperation(pollsByDate, { creatorId: userId, sortDirection: "DESC" }));
+                if (response.data.pollsByDate && response.data.pollsByDate.items) {
+                    console.log("Retrieved Polls: ", response.data.pollsByDate.items);
+                    setPolls(response.data.pollsByDate.items);
                 } else {
                     // Handle the case where no polls are returned
                     setPolls([]);
@@ -52,11 +50,13 @@ function ViewPolls({ creatorId }) {
     }
 
     return (
-        <Grid>
-            {polls.map(poll => (
-                listPoll(poll)
-            ))}
-        </Grid>
+        <Box fill overflow="scroll">
+            <Grid>
+                {polls.map(poll => (
+                    listPoll(poll)
+                ))}
+            </Grid>
+        </Box>
     );
 }
 

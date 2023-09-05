@@ -42,6 +42,7 @@ export const onCreatePoll = /* GraphQL */ `
     onCreatePoll(filter: $filter) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -57,7 +58,6 @@ export const onCreatePoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
@@ -68,6 +68,7 @@ export const onUpdatePoll = /* GraphQL */ `
     onUpdatePoll(filter: $filter) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -83,7 +84,6 @@ export const onUpdatePoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
@@ -94,6 +94,7 @@ export const onDeletePoll = /* GraphQL */ `
     onDeletePoll(filter: $filter) {
       id
       creatorId
+      createdAt
       options {
         items {
           pollId
@@ -109,7 +110,6 @@ export const onDeletePoll = /* GraphQL */ `
         __typename
       }
       description
-      createdAt
       updatedAt
       __typename
     }
