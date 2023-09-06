@@ -106,7 +106,6 @@
 //
 //export default withAuthenticator(App);
 
-import logo from './logo.svg';
 import './App.css';
 import { Router, Routes, Route } from 'react-router-dom';
 import { Box, Grid, Grommet, ResponsiveContext, Spinner } from 'grommet';
@@ -114,10 +113,6 @@ import PollOptions from './components/PollOptions';
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
-import { API } from "aws-amplify";
-import {
-  withAuthenticator,
-} from "@aws-amplify/ui-react";
 import VoteForOption from './components/VoteForOption';
 import ViewPolls from './components/ViewPolls';
 
@@ -126,27 +121,28 @@ function App() {
   const theme = {
     global: {
       colors: {
+        'faint': 'rgba(200, 200, 200, 1)',
         'light-2': '#f5f5f5',
         'text': {
           'light': 'rgba(0, 0, 0, 0.87)',
           'dark': 'rgba(255, 255, 255, 1)',
         },
         'background': {
-          'dark': 'rgba(0,0,0,1)'
+          'dark': '#262626',
         }
       },
-      edgeSize: {
-        small: '14px',
-      },
-      elevation: {
-        light: {
-          medium: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
-        },
-      },
-      font: {
-        size: '14px',
-        height: '20px',
-      },
+      //edgeSize: {
+      //  small: '14px',
+      //},
+      //elevation: {
+      //  light: {
+      //    medium: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
+      //  },
+      //},
+      //font: {
+      //  size: '14px',
+      //  height: '20px',
+      //},
     },
     button: {
       border: {
@@ -183,44 +179,25 @@ function App() {
         size => (
           <Grommet
             theme={theme}
+            id='grommetContainer'
             style={{
-              backgroundColor: 'black',
-              height: '100vh',
-              overflowY: 'hidden',
-              position: (size === 'small' ? 'fixed' : 'relative')
+              height: '100vh', // dont remove
+              width: '100vw', // dont remove
+              //overflowY: 'hidden',
+              //position: (size === 'small' ? 'fixed' : 'relative')
             }}
             themeMode='dark'
           >
             {
               console.log("size", size)
             }
-            <Grid
-              areas={[
-                { name: 'nav', start: [0, 0], end: [0, 0] },
-                { name: 'body', start: [0, 1], end: [0, 1] }
-              ]}
-              rows={['xxsmall', 'flex']}
-              columns={[]}
-              style={{ background: 'black', height: '85%' }}
-            >
-              <Box
-                style={{ visibility: 'hidden', zIndex: '10' }}
-                id='loading'
-                className='loading-modal'
-                fill
-                justify='center'
-                align='center'
-              >
-                <Spinner color='brand' size='large' />
-              </Box>
-              <Box gridArea='body' >
-                <Routes>
-                  <Route path='/' element={<PollOptions />} />
-                  <Route path='/vote' element={<VoteForOption />} />
-                  <Route path='/polls' element={<ViewPolls />} />
-                </Routes>
-              </Box>
-            </Grid>
+            <Box fill>
+              <Routes>
+                <Route path='/' element={<PollOptions />} />
+                <Route path='/vote' element={<VoteForOption />} />
+                <Route path='/polls' element={<ViewPolls />} />
+              </Routes>
+            </Box>
           </Grommet>
         )
       }

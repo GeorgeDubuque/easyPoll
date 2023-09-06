@@ -95,8 +95,8 @@ function PollOptions() {
     }
 
     return (
-        <Grid pad="medium" gap="medium">
-            <h2>easy poll</h2>
+        <Grid pad="medium" gap="medium" >
+            <Text color='white'>easy poll</Text>
             <TextInput
                 className='descriptionTitle'
                 placeholder={description === "" ? "What is your favorite color?" : ""}
