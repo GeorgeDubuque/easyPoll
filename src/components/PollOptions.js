@@ -83,7 +83,7 @@ const PollOptions = () => {
     }
 
     const requestTinyUrl = async (longUrl) => {
-        const API_TOKEN = '0LgSRMllWQj3Kd8biYAFCS27VbjzfgMKs67MgoYaeqO1PPkbXb3o58PP5Ic5';
+        const API_TOKEN = ''; //TODO: fill in api token
         let tinyUrl;
         try {
 
