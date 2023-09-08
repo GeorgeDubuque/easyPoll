@@ -44,6 +44,8 @@ export const getPoll = /* GraphQL */ `
           pollId
           text
           numVotes
+          tinyUrl
+          longUrl
           voters
           id
           createdAt
@@ -89,6 +91,8 @@ export const getOption = /* GraphQL */ `
       pollId
       text
       numVotes
+      tinyUrl
+      longUrl
       voters
       id
       createdAt
@@ -108,6 +112,8 @@ export const listOptions = /* GraphQL */ `
         pollId
         text
         numVotes
+        tinyUrl
+        longUrl
         voters
         id
         createdAt
@@ -173,18 +179,20 @@ export const pollsByDate = /* GraphQL */ `
         creatorId
         createdAt
         options {
-        items {
-          pollId
-          text
-          numVotes
-          voters
-          id
-          createdAt
-          updatedAt
+          items {
+            pollId
+            text
+            numVotes
+            tinyUrl
+            longUrl
+            voters
+            id
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
           __typename
-        }
-        nextToken
-        __typename
         }
         description
         updatedAt
@@ -216,6 +224,8 @@ export const optionsByPollIdAndNumVotes = /* GraphQL */ `
         pollId
         text
         numVotes
+        tinyUrl
+        longUrl
         voters
         id
         createdAt

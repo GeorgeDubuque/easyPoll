@@ -182,7 +182,7 @@ function App() {
             id='grommetContainer'
             style={{
               height: '100vh', // dont remove
-              width: '100vw', // dont remove
+              //width: '100vw', // dont remove
               //overflowY: 'hidden',
               //position: (size === 'small' ? 'fixed' : 'relative')
             }}

@@ -60,6 +60,8 @@ export const createPoll = /* GraphQL */ `
           pollId
           text
           numVotes
+          tinyUrl
+          longUrl
           voters
           id
           createdAt
@@ -89,6 +91,8 @@ export const updatePoll = /* GraphQL */ `
           pollId
           text
           numVotes
+          tinyUrl
+          longUrl
           voters
           id
           createdAt
@@ -118,6 +122,8 @@ export const deletePoll = /* GraphQL */ `
           pollId
           text
           numVotes
+          tinyUrl
+          longUrl
           voters
           id
           createdAt
@@ -142,6 +148,8 @@ export const createOption = /* GraphQL */ `
       pollId
       text
       numVotes
+      tinyUrl
+      longUrl
       voters
       id
       createdAt
@@ -159,6 +167,8 @@ export const updateOption = /* GraphQL */ `
       pollId
       text
       numVotes
+      tinyUrl
+      longUrl
       voters
       id
       createdAt
@@ -176,6 +186,8 @@ export const deleteOption = /* GraphQL */ `
       pollId
       text
       numVotes
+      tinyUrl
+      longUrl
       voters
       id
       createdAt

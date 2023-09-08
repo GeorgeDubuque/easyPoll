@@ -20,6 +20,8 @@ type Option @model @auth(rules: [ { allow: public } ] ){
   pollId: ID! @index(name: "byPoll", sortKeyFields: ["numVotes"])
   text: String!
   numVotes: Int!
+  tinyUrl: String!
+  longUrl: String!
   voters: [ID!]!
 }
 
