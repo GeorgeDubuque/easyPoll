@@ -1,0 +1,34 @@
+{
+  "baseUrl": "http://localhost:3000/",
+  "options": [
+    {
+      "id": "7e5b8b91-7940-41d1-a6d0-99473cd51b6d",
+      "text": "Tarik"
+    },
+    {
+      "id": "bb2f2613-52da-490e-afe5-44ab7eff5e4e",
+      "text": "Xqc"
+    },
+    {
+      "id": "a8d21795-e274-40b0-8216-364c12ddf990",
+      "text": "Pokimane"
+    },
+    {
+      "id": "ba124ff1-5378-4995-a704-6500601fec39",
+      "text": "Ludwig"
+    }
+  ],
+  "poll": {
+    "id": "d2404517-125d-42ff-9671-4bd13070ae89",
+    "creatorId": "0fab11cc-9027-444e-8c49-ffdb9a07664b",
+    "createdAt": "2023-09-14T00:51:25.471Z",
+    "options": {
+      "items": [],
+      "nextToken": null,
+      "__typename": "ModelOptionConnection"
+    },
+    "description": "What is the best streamer?",
+    "updatedAt": "2023-09-14T00:51:25.471Z",
+    "__typename": "Poll"
+  }
+}

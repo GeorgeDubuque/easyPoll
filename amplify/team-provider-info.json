@@ -17,6 +17,13 @@
       },
       "api": {
         "easypoll": {}
+      },
+      "function": {
+        "easyPollBulkRequestTinyUrl": {
+          "secretsPathAmplifyAppId": "d2hmluzzolv867",
+          "deploymentBucketName": "amplify-amplifyeca2af88eb374-staging-230631-deployment",
+          "s3Key": "amplify-builds/easyPollBulkRequestTinyUrl-5a584f6f3674736a7657-build.zip"
+        }
       }
     }
   }

@@ -43,9 +43,9 @@ const PollOptions = () => {
 
     const generatePollText = (poll, optionsList) => {
         console.log(poll, optionsList);
-        let pollText = "";
+        let pollText = `${poll.description}\n\n`;
         optionsList.forEach(option => {
-            pollText += `😀 ${option.text} - ${option.tinyUrl}\n\n`
+            pollText += `😀 ${option.text}\n ${option.tinyUrl}\n\n`
         });
 
         setGeneratedPoll(pollText);
@@ -129,28 +129,41 @@ const PollOptions = () => {
 
         const poll = createPollResult.data.createPoll;
 
-        console.log(`Create poll response: ${createPollResult}`);
-        console.log(`Poll: ${poll}`);
+        console.log(`poop`);
 
         //let tinyUrlDict = requestSmallUrls(poll, options);
-        let optionsToCreate = [];
-        for (let option of options) {
-            let optionId = uuidv4();
-            let longUrl = generateOptionLink(poll.id, optionId);
-            const tinyUrl = await requestTinyUrl(longUrl);
 
-            const optionParams = {
-                id: optionId,
-                text: option.text,
-                numVotes: 0,
-                tinyUrl: tinyUrl,
-                longUrl: longUrl,
-                voters: [],
-                pollId: poll.id
-            }
+        // Make a GET request to your serverless function
+        const apiUrl = 'https://xfm6ahnlme.execute-api.us-west-2.amazonaws.com/default/easyPollBulkRequestTinyUrl-staging';
+        
+        //TODO: add an api trigger for the lambda function so we can actually call it
+        const baseUrl = window.location.origin;
 
-            optionsToCreate.push(optionParams);
+        // Data to send in the request body (assuming it's in JSON format)
+        const requestData = {
+            baseUrl,
+            options,
+            poll
+        };
+        console.log('requestData:', requestData);
+        console.log("pooop");
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specify the content type as JSON
+            },
+            body: JSON.stringify(requestData), // Convert data to JSON string
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error calling the tiny url lambda functions ${response.status}`);
         }
+
+        const responseJson = await response.json();
+        console.log("responseJson: ", responseJson);
+
+        let optionsToCreate = responseJson.body.optionsToCreate;
 
         let optionsList = [];
 
