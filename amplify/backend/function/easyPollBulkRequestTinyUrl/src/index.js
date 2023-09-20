@@ -44,7 +44,7 @@ exports.handler = async (event) => {
     for (let option of options) {
         let optionId = uuid.v4();
         let longUrl = generateOptionLink(baseUrl, poll.id, optionId);
-        const API_TOKEN = Parameters[0].Value; //TODO: fill in api token
+        const API_TOKEN = Parameters[0].Value; 
         let tinyUrl;
         try {
 
@@ -85,6 +85,7 @@ exports.handler = async (event) => {
         }
 
         optionsToCreate.push(optionParams);
+        //TODO: figure out why pushing to amplify is failing
     }
     console.log("optionsToCreate: ", optionsToCreate);
     return {
@@ -92,8 +93,6 @@ exports.handler = async (event) => {
         //  Uncomment below to enable CORS requests
         headers: {
             'Access-Control-Allow-Origin': '*',
-            //'Access-Control-Allow-Methods': 'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT',
-            //'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
         },
         body: { optionsToCreate },
     };

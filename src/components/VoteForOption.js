@@ -22,6 +22,7 @@ function VoteForOption() {
     const [prevVotedOption, setPrevVotedOption] = useState({});
     const [poll, setPoll] = useState({});
     const cookies = new Cookies();
+    console.log("queryParameters", queryParameters);
     useEffect(() => {
         fetchPoll();
     }, []);
