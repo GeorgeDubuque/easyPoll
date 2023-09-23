@@ -17,7 +17,7 @@ const aws = require('aws-sdk');
 const uuid = require('uuid'); // Import UUID generator
 
 const generateOptionLink = (baseUrl, pollId, optionId) => {
-    return `${baseUrl}/vote?pollid=${pollId}&optionid=${optionId}`;
+    return `${baseUrl}/vote/?pollid=${pollId}&optionid=${optionId}`;
 }
 
 /**
@@ -85,7 +85,6 @@ exports.handler = async (event) => {
         }
 
         optionsToCreate.push(optionParams);
-        //TODO: figure out why pushing to amplify is failing
     }
     console.log("optionsToCreate: ", optionsToCreate);
     return {

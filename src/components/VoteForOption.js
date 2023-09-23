@@ -26,7 +26,7 @@ function VoteForOption() {
     useEffect(() => {
         fetchPoll();
     }, []);
-
+    //TODO: figure out why when pushing code the vote for option page is failing, and removing the url params
     const fetchPoll = async () => {
         //retrieve poll
         const pollParams = {
