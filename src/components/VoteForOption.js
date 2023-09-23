@@ -28,23 +28,27 @@ function VoteForOption() {
     }, []);
 
     const fetchPoll = async () => {
+        //retrieve poll
         const pollParams = {
             id: pollId
         };
         const pollResult = await API.graphql(graphqlOperation(getPoll, pollParams));
         const poll = pollResult.data.getPoll;
         console.log("Poll: ", poll);
+
+        //find option voted for in poll
         const votedOption = poll.options.items.find((option) => {
             return option.id === optionId;
         })
         console.log("Voted Option: ", votedOption);
 
+        //check if user has already voted on this poll and change vote if necessary
         const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
         let userId = getOrSetUserId();
         if (prevVotedOption) {
             if (prevVotedOption.id !== votedOption.id) {
 
-                // Remove vote from prev option
+                // remove vote from prev option
                 let prevVoters = prevVotedOption.voters;
                 prevVoters = removeItemFromArray(prevVoters, userId);
                 const removeUpdateParams = {
@@ -57,19 +61,21 @@ function VoteForOption() {
                 const removeVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, removeUpdateParams));
                 console.log("Removed previous vote: ", removeVoteResult);
 
+                // add new vote for curr option
+                const addVoteParams = {
+                    input: {
+                        id: votedOption.id,
+                        pollId: pollId,
+                        numVotes: (votedOption.numVotes + 1),
+                        voters: [...votedOption.voters, userId]
+                    }
+                }
+                const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));
+                console.log("Added vote:", addVoteResult);
+
             }
         }
-        // Add new vote for curr option
-        const addVoteParams = {
-            input: {
-                id: votedOption.id,
-                pollId: pollId,
-                numVotes: (votedOption.numVotes + 1),
-                voters: [...votedOption.voters, userId]
-            }
-        }
-        const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));
-        console.log("Added vote:", addVoteResult);
+
 
         console.log("Previously Voted Option: ", votedOption);
 

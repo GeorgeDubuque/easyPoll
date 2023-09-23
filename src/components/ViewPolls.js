@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { pollsByDate } from '../graphql/queries';
 import { Box, Grid, Text, Tip } from 'grommet';
 import { getOrSetUserId } from '../utility/utilities';
 import { Info } from 'grommet-icons';
 import PollBar from './PollBar';
+import { pollsByDateWithOptions } from '../graphql/custom-queries';
 
 
 const ViewPolls = ({ creatorId }) => {
@@ -17,7 +17,7 @@ const ViewPolls = ({ creatorId }) => {
                 const userId = getOrSetUserId();
 
                 const response = await API.graphql(
-                    graphqlOperation(pollsByDate, { creatorId: userId, sortDirection: "DESC" })
+                    graphqlOperation(pollsByDateWithOptions, { creatorId: userId, sortDirection: "DESC" })
                 );
 
                 if (response.data.pollsByDate && response.data.pollsByDate.items) {
