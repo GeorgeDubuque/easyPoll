@@ -179,6 +179,17 @@ export const pollsByDate = /* GraphQL */ `
         creatorId
         createdAt
         options {
+          items{
+            pollId
+            text
+            numVotes
+            tinyUrl
+            longUrl
+            voters
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
           __typename
         }

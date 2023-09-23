@@ -52,68 +52,6 @@ const PollOptions = () => {
         setIsPollGenerated(true);
     }
 
-    const generateOptionLink = (pollId, optionId) => {
-        var baseUrl = window.location.origin;
-        return `${baseUrl}/vote?pollid=${pollId}&optionid=${optionId}`;
-    }
-
-    const requestSmallUrls = (linkToOptions) => {
-        let batchUrlRequestBody = { items: [] };
-        for (const [link, option] of Object.entries(linkToOptions)) {
-            let currUrlItem = {
-                operation: "create",
-                url: link
-            }
-            batchUrlRequestBody.items.push(currUrlItem);
-        }
-
-        const API_TOKEN = '0LgSRMllWQj3Kd8biYAFCS27VbjzfgMKs67MgoYaeqO1PPkbXb3o58PP5Ic5';
-
-        fetch("https://api.tinyurl.com/bulk", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_TOKEN}`
-            },
-            body: JSON.stringify(batchUrlRequestBody)
-        })
-            .then(response => response.json())
-            .then(response => console.log("tinyUrl response: ", response));
-    }
-
-    const requestTinyUrl = async (longUrl) => {
-        const API_TOKEN = ''; //TODO: fill in api token
-        let tinyUrl;
-        try {
-
-            const response = await fetch("https://api.tinyurl.com/create", {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_TOKEN}`
-                },
-                body: JSON.stringify({
-                    url: longUrl
-                })
-            })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const responseJson = await response.json();
-
-            const data = responseJson.data.tiny_url; // or response.text() if you expect plain text
-            return data; // Return the fetched data
-        } catch (error) {
-            // Handle errors here
-            console.error('Fetch error:', error);
-            throw error; // Re-throw the error to propagate it to the caller
-        }
-    }
-
     const createPoll = async () => {
 
         // generate user id if not in cookies otherwise get from cookies
@@ -131,12 +69,10 @@ const PollOptions = () => {
 
         console.log(`poop`);
 
-        //let tinyUrlDict = requestSmallUrls(poll, options);
 
         // Make a GET request to your serverless function
         const apiUrl = 'https://xfm6ahnlme.execute-api.us-west-2.amazonaws.com/default/easyPollBulkRequestTinyUrl-staging';
         
-        //TODO: add an api trigger for the lambda function so we can actually call it
         const baseUrl = window.location.origin;
 
         // Data to send in the request body (assuming it's in JSON format)
@@ -146,7 +82,6 @@ const PollOptions = () => {
             poll
         };
         console.log('requestData:', requestData);
-        console.log("pooop");
 
         const response = await fetch(apiUrl, {
             method: 'POST',
