@@ -13,6 +13,16 @@ export const getOrSetUserId = () => {
 }
 
 
+export const generatePollText = (poll, optionsList) => {
+    console.log(poll, optionsList);
+    let pollText = `${poll.description}\n\n`;
+    optionsList.forEach(option => {
+        pollText += `😀 ${option.text}\n ${option.tinyUrl}\n\n`
+    });
+
+    return pollText;
+}
+
 export const getVotePercent = (numVotes, totalVotes) => {
     return totalVotes > 0 ? ((numVotes / totalVotes) * 100).toFixed(1) : 0;
 }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { Box, Grid, Text, Tip } from 'grommet';
-import { getOrSetUserId } from '../utility/utilities';
-import { Info } from 'grommet-icons';
+import { Box, Button, DropButton, Grid, Text, Tip } from 'grommet';
+import { generatePollText, getOrSetUserId } from '../utility/utilities';
+import { Clone, Info } from 'grommet-icons';
 import PollBar from './PollBar';
 import { pollsByDateWithOptions } from '../graphql/custom-queries';
+import copy from 'copy-to-clipboard';
 
 
 const ViewPolls = ({ creatorId }) => {
@@ -64,11 +65,14 @@ const ViewPolls = ({ creatorId }) => {
         const options = poll.options.items;
         return (
             <Grid margin="medium" gap="small" key={'poll-' + poll.id}>
-                <h3>{poll.description}</h3>
+                <Box direction='row'>
+                    <h3>{poll.description}</h3>
+                    <Button size='large' icon={<Clone/>} onClick={() => {copy(generatePollText(poll, options))}}/>
+                </Box>
                 {
                     options.map((option) => (
                         (
-                            <PollBar option={option} totalVotes={totalVotes}/>
+                            <PollBar option={option} totalVotes={totalVotes} />
                         )
                     ))
                 }

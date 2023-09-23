@@ -11,7 +11,7 @@ import {
 } from "../graphql/mutations";
 
 import $ from 'jquery';
-import { getOrSetUserId } from '../utility/utilities';
+import { generatePollText, getOrSetUserId } from '../utility/utilities';
 
 
 const PollOptions = () => {
@@ -40,17 +40,6 @@ const PollOptions = () => {
     const handleDescriptionChange = (newDescription) => {
         setDescription(newDescription);
     };
-
-    const generatePollText = (poll, optionsList) => {
-        console.log(poll, optionsList);
-        let pollText = `${poll.description}\n\n`;
-        optionsList.forEach(option => {
-            pollText += `😀 ${option.text}\n ${option.tinyUrl}\n\n`
-        });
-
-        setGeneratedPoll(pollText);
-        setIsPollGenerated(true);
-    }
 
     const createPoll = async () => {
 
@@ -115,7 +104,10 @@ const PollOptions = () => {
         }
 
 
-        generatePollText(poll, optionsList);
+        const pollText = generatePollText(poll, optionsList);
+
+        setGeneratedPoll(pollText);
+        setIsPollGenerated(true);
     }
 
     const copyGeneratedPollIntoClipboard = () => {

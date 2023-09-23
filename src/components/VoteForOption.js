@@ -40,48 +40,56 @@ function VoteForOption() {
         const votedOption = poll.options.items.find((option) => {
             return option.id === optionId;
         })
-        console.log("Voted Option: ", votedOption);
 
         //check if user has already voted on this poll and change vote if necessary
         const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
+        console.log("Voted Option: ", votedOption);
+        console.log("Previously Voted Option: ", prevVotedOption);
+
         let userId = getOrSetUserId();
         if (prevVotedOption) {
             if (prevVotedOption.id !== votedOption.id) {
 
-                // remove vote from prev option
-                let prevVoters = prevVotedOption.voters;
-                prevVoters = removeItemFromArray(prevVoters, userId);
-                const removeUpdateParams = {
-                    input: {
-                        id: prevVotedOption.id,
-                        numVotes: (prevVotedOption.numVotes - 1),
-                        voters: prevVoters
-                    }
-                }
-                const removeVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, removeUpdateParams));
-                console.log("Removed previous vote: ", removeVoteResult);
-
-                // add new vote for curr option
-                const addVoteParams = {
-                    input: {
-                        id: votedOption.id,
-                        pollId: pollId,
-                        numVotes: (votedOption.numVotes + 1),
-                        voters: [...votedOption.voters, userId]
-                    }
-                }
-                const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));
-                console.log("Added vote:", addVoteResult);
-
+                removeVoteForOption(prevVotedOption, userId);
+                addVoteForOption(pollId, votedOption, userId);
             }
+        } else {
+            addVoteForOption(pollId, votedOption, userId);
         }
 
-
-        console.log("Previously Voted Option: ", votedOption);
 
         setPrevVotedOption(prevVotedOption);
         setVotedOption(votedOption);
         setPoll(poll);
+    }
+
+    const removeVoteForOption = async (prevVotedOption, userId) => {
+        // remove vote from prev option
+        let prevVoters = prevVotedOption.voters;
+        prevVoters = removeItemFromArray(prevVoters, userId);
+        const removeUpdateParams = {
+            input: {
+                id: prevVotedOption.id,
+                numVotes: (prevVotedOption.numVotes - 1),
+                voters: prevVoters
+            }
+        }
+        const removeVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, removeUpdateParams));
+        console.log("Removed previous vote: ", removeVoteResult);
+    }
+
+    const addVoteForOption = async (pollId, votedOption, userId) => {
+        // add new vote for curr option
+        const addVoteParams = {
+            input: {
+                id: votedOption.id,
+                pollId: pollId,
+                numVotes: (votedOption.numVotes + 1),
+                voters: [...votedOption.voters, userId]
+            }
+        }
+        const addVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, addVoteParams));
+        console.log("Added vote:", addVoteResult);
     }
 
     const removeItemFromArray = (array, item) => {
