@@ -33,15 +33,16 @@ const PollBar = ({ option, totalVotes }) => {
             >
                 <Box
                     style={{ width: "100%", position: 'relative' }}
-                    background="dark-1"
+                    background="dark"
                     round
                     direction='row'
                     key={'option-' + option.id}
                 >
                     <Box
+                        background={'bright'}
                         style={{
                             width: votePercent + "%",
-                            backgroundColor: votePercent > 0 ? "#30a3f0" : "",
+                            //backgroundColor: votePercent > 0 ? "bright" : "",
                             position: 'absolute',
                             height: '100%',
                             boxShadow: `2px 0 5px 0 #000000, 

@@ -12,7 +12,7 @@ import {
 
 import $ from 'jquery';
 import { generatePollText, getOrSetUserId } from '../utility/utilities';
-import { Add, Close, FormClose, Trash } from 'grommet-icons';
+import { Add, AddCircle, Close, FormAdd, FormClose, Trash } from 'grommet-icons';
 import { Icon } from '@aws-amplify/ui-react';
 
 
@@ -117,10 +117,19 @@ const PollOptions = () => {
     }
 
     return (
-        <Box overflow='auto' fill>
-            <Grid pad="medium" gap="medium" >
-                <Text color='white'>easy poll</Text>
+        <Grid overflow='auto' dir='vertical' gap={'small'}>
+            <Box basis='small' background={'dark'}>
+                <Box align='center' pad='large' gap='medium'>
+                    <Text size='large' weight={'bold'} >Create a Poll</Text>
+                    <Text size='small' textAlign='center' color={'secondary'}>Fill in the fields below to create a poll.</Text>
+                </Box>
+                <Box background='bright' width='120%' height='5px'></Box>
+            </Box>
+            <Grid gap="small" pad={'small'} fill>
                 <TextInput
+                    style={{
+                        fontWeight: 'normal'
+                    }}
                     className='descriptionTitle'
                     placeholder={description === "" ? "What is your favorite color?" : ""}
                     value={description}
@@ -130,6 +139,9 @@ const PollOptions = () => {
                 {options.map((option, index) => (
                     <Box key={option.id} direction='row' align='center' gap='medium' margin={'small'}>
                         <TextInput
+                            style={{
+                                fontWeight: 'lighter'
+                            }}
                             className='optionInput'
                             placeholder={option.text === "" ? "Option " + (index + 1) : ""}
                             value={option.text}
@@ -139,18 +151,16 @@ const PollOptions = () => {
                             <Button
                                 pad={'none'}
                                 style={{
-
-                                    backgroundColor: 'dark-gray',
                                     borderRadius: '50%'
                                 }}
                                 onClick={() => removeOption(option.id)}
-                                icon={<FormClose size='medium' color='black' />}
+                                icon={<FormClose size='medium' color='secondary' />}
                             />
                         </Box>
                     </Box>
                 ))}
-                <Button onClick={addOption} label={"Add another option"} icon={<Add />} />
-                <Button primary onClick={createPoll} label={<b>Generate Poll</b>} />
+                <Button onClick={addOption} label={"Add another option"} icon={<FormAdd size='medium' />} />
+                <Button style={{ fontWeight: 'bolder' }} primary color={'bright'} onClick={createPoll} label={'Generate poll'} />
 
                 {/* Display generated poll text. */}
                 {isPollGenerated ? (
@@ -161,13 +171,13 @@ const PollOptions = () => {
                             rows={options.length * 3}
                             value={generatedPoll}
                         />
-                        <Button primary onClick={copyGeneratedPollIntoClipboard} label="Copy Link" />
+                        <Button primary onClick={copyGeneratedPollIntoClipboard} label="Copy poll" />
                     </Box>
                 ) : (
                     ""
                 )}
             </Grid>
-        </Box>
+        </Grid>
     );
 }
 
