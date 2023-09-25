@@ -120,15 +120,21 @@ import ViewPolls from './components/ViewPolls';
 function App() {
   const theme = {
     global: {
+      focus: {
+        border: {
+          color: 'myBlue'
+        }
+      },
       colors: {
         'faint': 'rgba(200, 200, 200, 1)',
         'light-2': '#f5f5f5',
+        'myBlue': "#A3B18A",
         'text': {
           'light': 'rgba(0, 0, 0, 0.87)',
           'dark': 'rgba(255, 255, 255, 1)',
         },
         'background': {
-          'dark': '#262626',
+          'dark': '#262126',
         }
       },
       //edgeSize: {
@@ -144,15 +150,24 @@ function App() {
       //  height: '20px',
       //},
     },
+    input: {
+      selected: {
+        color: 'myBlue'
+      }
+    },
     button: {
       border: {
         width: '1px',
         radius: '10px',
+        color: 'myBlue'
       },
       padding: {
         vertical: '8px',
         horizontal: '16px',
       },
+      primary: {
+        color: 'myBlue'
+      }
       //extend: props => `
       //    text-transform: uppercase;
       //    font-size: 0.875rem;
@@ -171,7 +186,7 @@ function App() {
       animation: {
         duration: 100
       }
-    }
+    },
   };
   return (
     <ResponsiveContext.Consumer>

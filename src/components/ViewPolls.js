@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { Box, Button, DropButton, Grid, Text, Tip } from 'grommet';
 import { generatePollText, getOrSetUserId } from '../utility/utilities';
-import { Clone, Info } from 'grommet-icons';
+import { Clone, Info, Trash } from 'grommet-icons';
 import PollBar from './PollBar';
 import { pollsByDateWithOptions } from '../graphql/custom-queries';
 import copy from 'copy-to-clipboard';
+import { deletePoll as deletePollMutation } from '../graphql/mutations';
 
 
 const ViewPolls = ({ creatorId }) => {
@@ -50,6 +51,25 @@ const ViewPolls = ({ creatorId }) => {
         return totalVotes > 0 ? ((numVotes / totalVotes) * 100).toFixed(1) : 0;
     }
 
+    const displayNoPolls = () => {
+        return (
+            <Box>You have no polls.</Box>
+        )
+    }
+
+    const deletePoll = async (pollId) => {
+        console.log("deletePoll: ", pollId);
+        const deletePollParams = {
+            input: { id: pollId }
+        }
+
+        const deletePollResult = await API.graphql(
+            graphqlOperation(deletePollMutation, deletePollParams)
+        );
+
+        console.log("deleted poll result: ", deletePollResult);
+
+    }
 
     const listPolls = () => {
         let listedPolls = [];
@@ -67,7 +87,12 @@ const ViewPolls = ({ creatorId }) => {
             <Grid margin="medium" gap="small" key={'poll-' + poll.id}>
                 <Box direction='row'>
                     <h3>{poll.description}</h3>
-                    <Button size='large' icon={<Clone/>} onClick={() => {copy(generatePollText(poll, options))}}/>
+                    <Button size='small' icon={<Clone />}
+                        onClick={() => { copy(generatePollText(poll, options)) }}
+                    />
+                    <Button size='small' icon={<Trash />}
+                        onClick={() => { deletePoll(poll.id) }}
+                    />
                 </Box>
                 {
                     options.map((option) => (
@@ -88,7 +113,9 @@ const ViewPolls = ({ creatorId }) => {
     return (
         <Box overflow="auto">
             <Grid>
-                {listPolls()}
+                {
+                    polls.length !== 0 ? listPolls() : displayNoPolls()
+                }
             </Grid>
         </Box>
     );

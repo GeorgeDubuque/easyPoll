@@ -12,6 +12,8 @@ import {
 
 import $ from 'jquery';
 import { generatePollText, getOrSetUserId } from '../utility/utilities';
+import { Add, Close, FormClose, Trash } from 'grommet-icons';
+import { Icon } from '@aws-amplify/ui-react';
 
 
 const PollOptions = () => {
@@ -61,7 +63,7 @@ const PollOptions = () => {
 
         // Make a GET request to your serverless function
         const apiUrl = 'https://xfm6ahnlme.execute-api.us-west-2.amazonaws.com/default/easyPollBulkRequestTinyUrl-staging';
-        
+
         const baseUrl = window.location.origin;
 
         // Data to send in the request body (assuming it's in JSON format)
@@ -126,18 +128,29 @@ const PollOptions = () => {
                     autoFocus={true}
                 />
                 {options.map((option, index) => (
-                    <Box key={option.id} direction='row'>
+                    <Box key={option.id} direction='row' align='center' gap='medium' margin={'small'}>
                         <TextInput
                             className='optionInput'
                             placeholder={option.text === "" ? "Option " + (index + 1) : ""}
                             value={option.text}
                             onChange={e => handleOptionChange(option.id, e.target.value)}
                         />
-                        <Button onClick={() => removeOption(option.id)} label="x" />
+                        <Box alignContent='center' align='center'>
+                            <Button
+                                pad={'none'}
+                                style={{
+
+                                    backgroundColor: 'dark-gray',
+                                    borderRadius: '50%'
+                                }}
+                                onClick={() => removeOption(option.id)}
+                                icon={<FormClose size='medium' color='black' />}
+                            />
+                        </Box>
                     </Box>
                 ))}
-                <Button primary onClick={addOption} label="Add Option" />
-                <Button primary onClick={createPoll} label="Generate Poll" />
+                <Button onClick={addOption} label={"Add another option"} icon={<Add />} />
+                <Button primary onClick={createPoll} label={<b>Generate Poll</b>} />
 
                 {/* Display generated poll text. */}
                 {isPollGenerated ? (

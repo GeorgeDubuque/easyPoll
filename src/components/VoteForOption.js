@@ -21,12 +21,12 @@ function VoteForOption() {
     const [votedOption, setVotedOption] = useState({});
     const [prevVotedOption, setPrevVotedOption] = useState({});
     const [poll, setPoll] = useState({});
+    const [error, setError] = useState();
     const cookies = new Cookies();
     console.log("queryParameters", queryParameters);
     useEffect(() => {
         fetchPoll();
     }, []);
-    //TODO: figure out why when pushing code the vote for option page is failing, and removing the url params
     const fetchPoll = async () => {
         //retrieve poll
         const pollParams = {
@@ -34,33 +34,38 @@ function VoteForOption() {
         };
         const pollResult = await API.graphql(graphqlOperation(getPoll, pollParams));
         const poll = pollResult.data.getPoll;
+        console.log("PollResult: ", pollResult);
         console.log("Poll: ", poll);
 
-        //find option voted for in poll
-        const votedOption = poll.options.items.find((option) => {
-            return option.id === optionId;
-        })
+        if (poll !== null) {
+            //find option voted for in poll
+            const votedOption = poll.options.items.find((option) => {
+                return option.id === optionId;
+            })
 
-        //check if user has already voted on this poll and change vote if necessary
-        const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
-        console.log("Voted Option: ", votedOption);
-        console.log("Previously Voted Option: ", prevVotedOption);
+            //check if user has already voted on this poll and change vote if necessary
+            const prevVotedOption = getPreviouslyVotedOption(poll.options.items);
+            console.log("Voted Option: ", votedOption);
+            console.log("Previously Voted Option: ", prevVotedOption);
 
-        let userId = getOrSetUserId();
-        if (prevVotedOption) {
-            if (prevVotedOption.id !== votedOption.id) {
+            let userId = getOrSetUserId();
+            if (prevVotedOption) {
+                if (prevVotedOption.id !== votedOption.id) {
 
-                removeVoteForOption(prevVotedOption, userId);
+                    removeVoteForOption(prevVotedOption, userId);
+                    addVoteForOption(pollId, votedOption, userId);
+                }
+            } else {
                 addVoteForOption(pollId, votedOption, userId);
             }
+
+
+            setPrevVotedOption(prevVotedOption);
+            setVotedOption(votedOption);
+            setPoll(poll);
         } else {
-            addVoteForOption(pollId, votedOption, userId);
+            setError("This poll does not exist or has been deleted by it's creator.");
         }
-
-
-        setPrevVotedOption(prevVotedOption);
-        setVotedOption(votedOption);
-        setPoll(poll);
     }
 
     const removeVoteForOption = async (prevVotedOption, userId) => {
@@ -74,7 +79,9 @@ function VoteForOption() {
                 voters: prevVoters
             }
         }
-        const removeVoteResult = await API.graphql(graphqlOperation(updateOptionMutation, removeUpdateParams));
+        const removeVoteResult = await API.graphql(
+            graphqlOperation(updateOptionMutation, removeUpdateParams)
+        );
         console.log("Removed previous vote: ", removeVoteResult);
     }
 
@@ -119,7 +126,8 @@ function VoteForOption() {
             if (votedOption.id === prevVotedOption.id) {
                 votedMessage = `You already voted "${votedOption.text}" on this poll!`
             } else {
-                votedMessage = `You changed your vote from "${prevVotedOption.text}" to "${votedOption.text}".`
+                votedMessage = 
+                    `You changed your vote from "${prevVotedOption.text}" to "${votedOption.text}".`
             }
         }
 
@@ -128,8 +136,19 @@ function VoteForOption() {
 
     return (
         <Grid pad="medium" gap="medium">
-            <h2>{poll.description}</h2>
-            <h2>{getVotedMessage()}</h2>
+            {
+                !error ? (
+                    <Box>
+                        <h2>{poll.description}</h2>
+                        <h2>{getVotedMessage()}</h2>
+                    </Box>
+                ) :
+                    (
+                        <Box>
+                            <h2>{error}</h2>
+                        </Box>
+                    )
+            }
         </Grid>
     );
 }
