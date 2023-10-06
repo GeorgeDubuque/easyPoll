@@ -164,11 +164,11 @@ const PollOptions = () => {
 
                 {/* Display generated poll text. */}
                 {isPollGenerated ? (
-                    <Box>
+                    <Box gap="medium">
                         <textarea
                             readOnly
                             style={{ resize: "none" }}
-                            rows={options.length * 3}
+                            rows={options.length * 3 + 1}
                             value={generatedPoll}
                         />
                         <Button primary onClick={copyGeneratedPollIntoClipboard} label="Copy poll" />

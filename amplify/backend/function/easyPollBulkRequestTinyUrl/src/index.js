@@ -16,6 +16,8 @@ const fetch = require('node-fetch');
 const aws = require('aws-sdk');
 const uuid = require('uuid'); // Import UUID generator
 
+const DEV_URL_SHORTENER_ENDPOINT = "https://9buzrx3oe7.execute-api.us-west-2.amazonaws.com/dev/url-shortener";
+
 const generateOptionLink = (baseUrl, pollId, optionId) => {
     return `${baseUrl}/vote/?pollid=${pollId}&optionid=${optionId}`;
 }
@@ -44,21 +46,29 @@ exports.handler = async (event) => {
     for (let option of options) {
         let optionId = uuid.v4();
         let longUrl = generateOptionLink(baseUrl, poll.id, optionId);
+
+        var shortId = Date.now().toString(36); // get time in mills and convert to radix-32
+        console.log(`Creating new shortId at time ${Date.now()}: ${shortId}`);
+
         const API_TOKEN = Parameters[0].Value; 
-        let tinyUrl;
+        let shortenedUrl;
         try {
 
-            const response = await fetch("https://api.tinyurl.com/create", {
+            const response = await fetch(DEV_URL_SHORTENER_ENDPOINT, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_TOKEN}`
+                    //'Authorization': `Bearer ${API_TOKEN}`
                 },
                 body: JSON.stringify({
-                    url: longUrl
+                    longUrl: longUrl,
+                    owner: "easyPoll",
+                    shortId: shortId
                 })
             })
+
+            console.log("DB Response: ", response);
 
             if (!response.ok) {
                 console.log(response)
@@ -67,7 +77,7 @@ exports.handler = async (event) => {
 
             const responseJson = await response.json();
 
-            tinyUrl = responseJson.data.tiny_url; // or response.text() if you expect plain text
+            shortenedUrl = DEV_URL_SHORTENER_ENDPOINT + "/" + shortId; // or response.text() if you expect plain text
         } catch (error) {
             // Handle errors here
             console.error('Fetch error:', error);
@@ -78,7 +88,7 @@ exports.handler = async (event) => {
             id: optionId,
             text: option.text,
             numVotes: 0,
-            tinyUrl: tinyUrl,
+            tinyUrl: shortenedUrl,
             longUrl: longUrl,
             voters: [],
             pollId: poll.id

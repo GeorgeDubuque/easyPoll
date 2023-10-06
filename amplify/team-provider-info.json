@@ -22,7 +22,7 @@
         "easyPollBulkRequestTinyUrl": {
           "secretsPathAmplifyAppId": "d2hmluzzolv867",
           "deploymentBucketName": "amplify-amplifyeca2af88eb374-staging-230631-deployment",
-          "s3Key": "amplify-builds/easyPollBulkRequestTinyUrl-764f364d67566c557a44-build.zip"
+          "s3Key": "amplify-builds/easyPollBulkRequestTinyUrl-657a3541595379516675-build.zip"
         }
       }
     }
