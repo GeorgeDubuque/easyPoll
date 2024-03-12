@@ -4,10 +4,15 @@ import Cookies from 'universal-cookie';
 
 export const getOrSetUserId = () => {
     const cookies = new Cookies();
-    let userId = cookies.get("userId");
+    let userId = cookies.get("userId", {
+        path: "/"
+    });
     if (!userId) {
         userId = uuidv4();
-        cookies.set("userId", userId, { maxAge: 100000 });
+        cookies.set("userId", userId, { 
+            expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), 
+            path: "/" 
+        });
     }
     return userId;
 }

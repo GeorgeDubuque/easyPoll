@@ -16,7 +16,7 @@ const fetch = require('node-fetch');
 const aws = require('aws-sdk');
 const uuid = require('uuid'); // Import UUID generator
 
-const DEV_URL_SHORTENER_ENDPOINT = "https://9buzrx3oe7.execute-api.us-west-2.amazonaws.com/dev/url-shortener";
+const DEV_URL_SHORTENER_ENDPOINT = "vote.ezpoll.net";
 
 const generateOptionLink = (baseUrl, pollId, optionId) => {
     return `${baseUrl}/vote/?pollid=${pollId}&optionid=${optionId}`;
@@ -54,10 +54,10 @@ exports.handler = async (event) => {
         let shortenedUrl;
         try {
 
-            const response = await fetch(DEV_URL_SHORTENER_ENDPOINT, {
+            const response = await fetch("https://" + DEV_URL_SHORTENER_ENDPOINT, {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
+                    //'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     //'Authorization': `Bearer ${API_TOKEN}`
                 },
@@ -77,7 +77,7 @@ exports.handler = async (event) => {
 
             const responseJson = await response.json();
 
-            shortenedUrl = DEV_URL_SHORTENER_ENDPOINT + "/" + shortId; // or response.text() if you expect plain text
+            shortenedUrl =  "https://" + DEV_URL_SHORTENER_ENDPOINT + "/" + shortId; // or response.text() if you expect plain text
         } catch (error) {
             // Handle errors here
             console.error('Fetch error:', error);
