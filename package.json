@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "aws-amplify": "^5.3.7",
     "copy-to-clipboard": "^3.3.3",
+    "emoji-from-word": "^1.2.12",
     "grommet": "^2.33.1",
     "grommet-icons": "^4.11.0",
     "jquery": "^3.7.0",

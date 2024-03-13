@@ -28,7 +28,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.loading-modal {
+  position: fixed;
+  background-color: rgba(27, 27, 27, 0.8);
+}
 .App-link {
   color: #61dafb;
 }

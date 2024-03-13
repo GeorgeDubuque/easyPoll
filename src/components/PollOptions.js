@@ -11,7 +11,12 @@ import {
 } from "../graphql/mutations"
 
 import $ from "jquery"
-import { generatePollText, getOrSetUserId } from "../utility/utilities"
+import {
+	generatePollText,
+	getOrSetUserId,
+	hideLoading,
+	showLoading,
+} from "../utility/utilities"
 import { Add, AddCircle, Close, FormAdd, FormClose, Trash } from "grommet-icons"
 import { Icon } from "@aws-amplify/ui-react"
 
@@ -20,9 +25,13 @@ const PollOptions = () => {
 	const [isPollGenerated, setIsPollGenerated] = useState(false)
 	const [generatedPoll, setGeneratedPoll] = useState("")
 	const [description, setDescription] = useState("")
+	const [refresh, setRefresh] = useState(false)
+	const [lastCreatedOptionId, setLastCreatedOptionId] = useState("")
 
 	const addOption = async () => {
-		const newOption = { id: uuidv4(), text: "" } // Generate unique ID
+		const optionId = uuidv4()
+		const newOption = { id: optionId, text: "" } // Generate unique ID
+		setLastCreatedOptionId(optionId)
 		setOptions([...options, newOption])
 	}
 
@@ -43,6 +52,7 @@ const PollOptions = () => {
 	}
 
 	const createPoll = async () => {
+		showLoading()
 		// generate user id if not in cookies otherwise get from cookies
 		let userId = getOrSetUserId()
 
@@ -55,8 +65,6 @@ const PollOptions = () => {
 		)
 
 		const poll = createPollResult.data.createPoll
-
-		console.log(`poop`)
 
 		// Make a GET request to your serverless function
 		const apiUrl =
@@ -107,6 +115,7 @@ const PollOptions = () => {
 
 		const pollText = generatePollText(poll, optionsList)
 
+		hideLoading()
 		setGeneratedPoll(pollText)
 		setIsPollGenerated(true)
 	}
@@ -115,97 +124,187 @@ const PollOptions = () => {
 		copy(generatedPoll)
 	}
 
+	const onKeyDownPollInput = (event) => {
+		if (event.key === "Enter") {
+			if (options.length == 0) {
+				addOption()
+			} else {
+				document.getElementById(options[0].id).focus()
+			}
+		}
+	}
+
+	const onKeyDownOptionInput = (event) => {
+		if (event.key === "Enter") {
+			console.log(event.srcElement, lastCreatedOptionId)
+			if (event.srcElement.id === options[options.length - 1].id) {
+				addOption()
+			} else {
+				let nextOption
+				for (let i = 0; i < options.length; i++) {
+					if (options[i].id === event.srcElement.id) {
+						nextOption = options[i + 1]
+						break
+					}
+				}
+
+				document.getElementById(nextOption.id).focus()
+			}
+		} else if (event.key === "Backspace") {
+			if (event.srcElement.value === "") {
+				event.preventDefault()
+				console.log("empty that ass girl")
+				let nextOption
+				for (let i = options.length - 1; i >= 0; i--) {
+					if (options[i].id === event.srcElement.id) {
+						nextOption = options[i - 1]
+						break
+					}
+				}
+
+				removeOption(event.srcElement.id)
+				if (options.length > 1) {
+					document.getElementById(nextOption.id).focus()
+				} else {
+					document.getElementById("poll-title").focus()
+				}
+			}
+		}
+	}
 	return (
-		<Grid overflow="auto" dir="vertical" gap={"small"}>
-			<Box basis="small" background={"dark"} dir="horizontal">
-				<Box align="center" pad="large" gap="medium">
-					<Text size="large" weight={"bold"}>
-						Create a Poll
-					</Text>
-					<Text size="small" textAlign="center" color={"secondary"}>
-						Fill in the fields below to create a poll.
-					</Text>
-					<Button href="/polls" label={"View My Polls"} />
-				</Box>
-				<Box background="bright" width="120%" height="5px"></Box>
-			</Box>
-			<Grid gap="small" pad={"small"} fill>
-				<TextInput
-					style={{
-						fontWeight: "normal",
+		<Box
+			overflow="auto"
+			direction="column"
+			justify="center"
+			width={"fit-content"}
+			//gap="small"
+			fill="horizontal"
+		>
+			<Box
+				//basis="small"
+				background={"dark"}
+				direction="column"
+				fill="horizontal"
+				align="center"
+				pad={{ horizontal: "small", vertical: "large" }}
+				gap="medium"
+				justify="evenly"
+			>
+				<Text size="large" weight={"bold"}>
+					Create a Poll
+				</Text>
+				<Text size="small" textAlign="center" color={"secondary"}>
+					Fill in the fields below to create a poll.
+				</Text>
+				<Button
+					label={"View My Polls"}
+					onClick={() => {
+						showLoading()
+						window.location.href = "../polls"
 					}}
-					className="descriptionTitle"
-					placeholder={description === "" ? "What is your favorite color?" : ""}
-					value={description}
-					onChange={(e) => handleDescriptionChange(e.target.value)}
-					autoFocus={true}
 				/>
-				{options.map((option, index) => (
-					<Box
-						key={option.id}
-						direction="row"
-						align="center"
-						gap="medium"
-						margin={"small"}
-					>
-						<TextInput
-							style={{
-								fontWeight: "lighter",
-							}}
-							className="optionInput"
-							placeholder={
-								option.text === "" ? "Option " + (index + 1) : ""
-							}
-							value={option.text}
-							onChange={(e) =>
-								handleOptionChange(option.id, e.target.value)
-							}
-						/>
-						<Box alignContent="center" align="center">
-							<Button
-								pad={"none"}
+			</Box>
+			<Box background="bright" fill="horizontal" height="5px"></Box>
+			<Box
+				width="large"
+				round
+				pad="medium"
+				alignSelf="center"
+				justify="evenly"
+				flex="shrink"
+			>
+				<Grid gap="small" pad={"small"} fill>
+					<TextInput
+						style={{
+							fontWeight: "normal",
+						}}
+						className="descriptionTitle"
+						id="poll-title"
+						placeholder={
+							description === "" ? "What is your favorite color?" : ""
+						}
+						value={description}
+						onChange={(e) => handleDescriptionChange(e.target.value)}
+						onKeyDown={onKeyDownPollInput}
+						autoFocus={true}
+					/>
+					{options.map((option, index) => (
+						<Box
+							key={option.id}
+							direction="row"
+							align="center"
+							gap="medium"
+							margin={"small"}
+						>
+							<TextInput
 								style={{
-									borderRadius: "50%",
+									fontWeight: "lighter",
 								}}
-								onClick={() => removeOption(option.id)}
-								icon={<FormClose size="medium" color="secondary" />}
+								className="optionInput"
+								placeholder={
+									option.text === "" ? "Option " + (index + 1) : ""
+								}
+								autoFocus={index === options.length - 1}
+								value={option.text}
+								id={option.id}
+								onKeyDown={onKeyDownOptionInput}
+								onChange={(e) =>
+									handleOptionChange(option.id, e.target.value)
+								}
+							/>
+							<Box alignContent="center" align="center">
+								<Button
+									pad={"none"}
+									style={{
+										borderRadius: "50%",
+									}}
+									onClick={() => removeOption(option.id)}
+									icon={<FormClose size="medium" color="secondary" />}
+								/>
+							</Box>
+						</Box>
+					))}
+					<Button
+						onClick={addOption}
+						label={"Add another option"}
+						icon={<FormAdd size="medium" />}
+					/>
+					<Button
+						style={{ fontWeight: "bolder" }}
+						primary
+						color={"bright"}
+						onClick={createPoll}
+						label={"Generate poll"}
+					/>
+
+					{/* Display generated poll text. */}
+					{isPollGenerated ? (
+						<Box gap="medium">
+							<textarea
+								readOnly
+								style={{ resize: "none" }}
+								rows={options.length * 3 + 1}
+								value={generatedPoll}
+							/>
+							<Button
+								primary
+								onClick={copyGeneratedPollIntoClipboard}
+								label="Copy poll"
+							/>
+							<Button
+								primary
+								onClick={() => {
+									window.location.href = "../"
+								}}
+								label="New Poll +"
 							/>
 						</Box>
-					</Box>
-				))}
-				<Button
-					onClick={addOption}
-					label={"Add another option"}
-					icon={<FormAdd size="medium" />}
-				/>
-				<Button
-					style={{ fontWeight: "bolder" }}
-					primary
-					color={"bright"}
-					onClick={createPoll}
-					label={"Generate poll"}
-				/>
-
-				{/* Display generated poll text. */}
-				{isPollGenerated ? (
-					<Box gap="medium">
-						<textarea
-							readOnly
-							style={{ resize: "none" }}
-							rows={options.length * 3 + 1}
-							value={generatedPoll}
-						/>
-						<Button
-							primary
-							onClick={copyGeneratedPollIntoClipboard}
-							label="Copy poll"
-						/>
-					</Box>
-				) : (
-					""
-				)}
-			</Grid>
-		</Grid>
+					) : (
+						""
+					)}
+				</Grid>
+			</Box>
+		</Box>
 	)
 }
 

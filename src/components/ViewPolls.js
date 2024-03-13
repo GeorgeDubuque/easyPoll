@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { API, graphqlOperation } from "aws-amplify"
-import { Box, Button, DropButton, Grid, Text, Tip } from "grommet"
-import { generatePollText, getOrSetUserId } from "../utility/utilities"
-import { Clone, Info, Trash } from "grommet-icons"
+import { Box, Button, DropButton, Grid, Spinner, Text, Tip } from "grommet"
+import {
+	generatePollText,
+	getOrSetUserId,
+	hideLoading,
+	showLoading,
+} from "../utility/utilities"
+import { Clone, FormAdd, Info, Trash } from "grommet-icons"
 import PollBar from "./PollBar"
 import { pollsByDateWithOptions } from "../graphql/custom-queries"
 import copy from "copy-to-clipboard"
@@ -11,9 +16,11 @@ import { deletePoll as deletePollMutation } from "../graphql/mutations"
 const ViewPolls = ({ creatorId }) => {
 	const [polls, setPolls] = useState([])
 	const [error, setError] = useState(null)
+	const [refresh, setRefresh] = useState(false)
 
 	useEffect(() => {
 		async function fetchPolls() {
+			showLoading()
 			try {
 				const userId = getOrSetUserId()
 
@@ -38,7 +45,8 @@ const ViewPolls = ({ creatorId }) => {
 		}
 
 		fetchPolls()
-	}, [creatorId])
+		hideLoading()
+	}, [creatorId, refresh])
 
 	const getTotalVotesOnPoll = (poll) => {
 		let totalVotes = 0
@@ -58,14 +66,17 @@ const ViewPolls = ({ creatorId }) => {
 	}
 
 	const deletePoll = async (pollId) => {
+		showLoading()
 		console.log("deletePoll: ", pollId)
 		const deletePollParams = {
 			input: { id: pollId },
 		}
-
+		let loadingModal = document.getElementById("loading")
+		loadingModal.style.visibility = "visible"
 		const deletePollResult = await API.graphql(
 			graphqlOperation(deletePollMutation, deletePollParams)
 		)
+		setRefresh(!refresh)
 
 		console.log("deleted poll result: ", deletePollResult)
 	}
@@ -85,17 +96,29 @@ const ViewPolls = ({ creatorId }) => {
 		return (
 			<Grid margin="medium" gap="small" key={"poll-" + poll.id}>
 				<Box direction="row">
-					<h3>{poll.description}</h3>
+					<Text margin="small" alignSelf="center" size="large">
+						{poll.description}
+					</Text>
 					<Button
-						size="small"
-						icon={<Clone />}
+						style={{
+							border: "2px solid #C1C1C1",
+							borderRadius: "5px",
+						}}
+						color={"dark"}
+						primary
+						margin="small"
+						icon={<Clone size="20px" />}
 						onClick={() => {
 							copy(generatePollText(poll, options))
 						}}
+						elevation="large"
 					/>
 					<Button
-						size="small"
-						icon={<Trash />}
+						style={{ border: "2px solid #C1C1C1", borderRadius: "5px" }}
+						color={"dark"}
+						primary
+						margin="small"
+						icon={<Trash size="20px" />}
 						onClick={() => {
 							deletePoll(poll.id)
 						}}
@@ -119,11 +142,15 @@ const ViewPolls = ({ creatorId }) => {
 		<Box>
 			<Button
 				margin={{ horizontal: "large", vertical: "medium" }}
-				href={"/"}
+				onClick={() => {
+					showLoading()
+					window.location.href = "../"
+				}}
 				//justify={"evenly"}
 				primary
 				color={"bright"}
-				label={"Create New Poll +"}
+				label={"Create New Poll"}
+				icon={<FormAdd size="medium" />}
 				alignSelf={"center"}
 			/>
 			<Box overflow="auto">
