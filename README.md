@@ -4,7 +4,7 @@ Welcome to ezpoll! This application allows you to easily create and share polls 
 
 ## Inspiration
 
-ezpoll was inspired by the many group texts that I am a part of, where no one could seem to make a decision and there was no simple and easy way to create a poll. Other polling apps either require you to log in or are way too complicated for simple use cases like this. ezpoll allows users to vote directly within the group text, making it incredibly convenient.
+Ezpoll.net was inspired by a group text I am a part of where often times we need to decide where to eat but no one could seem to make a decision and there was no simple and easy way to create a poll. Other polling apps either require you to log in or are way too complicated for simple use cases like this. ezpoll allows users to vote directly within the group text, making it incredibly convenient.
 
 
 ![alt text](https://github.com/GeorgeDubuque/easyPoll/blob/main/src/screenshots/screenshots.png)
