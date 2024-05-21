@@ -12,7 +12,7 @@ Ezpoll.net was inspired by a group text I am a part of where often times we need
 ## Features
 
 - **Create Polls:** Quickly set up polls with custom questions and answer options.
-- **Shareable Links:** Generate a custom URL for each poll, optimized for readability and easy sharing within text message threads.
+- **Shareable Links:** Generate a text based poll allowing others in a text thread to vote on the poll without leaving the text thread.
 - **Real-Time Voting:** Allow participants to vote in real-time and see updated results instantly.
 - **React Frontend:** A responsive and intuitive interface built with React.
 - **AWS Integration:** Robust backend support using AWS services:
