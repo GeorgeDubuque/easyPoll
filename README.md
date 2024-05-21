@@ -2,7 +2,7 @@
 
 Welcome to ezpoll! This application allows you to easily create and share polls within text message threads. Designed with a focus on usability and integration, this app leverages modern technologies to deliver a seamless polling experience.
 
-![alt text](https://github.com/GeorgeDubuque/easyPoll/blob/main/src/screenshots/ezpollScreenshots_createpoll.png)
+![alt text](https://github.com/GeorgeDubuque/easyPoll/blob/main/src/screenshots/screenshots.png)
 
 ## Features
 
